@@ -1,0 +1,88 @@
+*** Settings ***
+Library           Selenium2Library
+Resource          ../通用关键字/通用关键字.txt
+Resource          ../测试环境配置/测试环境变量.txt
+Resource          ../通用关键字/通用时间关键字.txt
+
+*** Keywords ***
+B2B网站登录
+    [Arguments]    ${browser}=ff
+    打开浏览器    ${url}    gc
+    文本框输入    用户名    rebecca
+    文本框输入    密 \ \ \ \ 码    888
+    点击登录
+
+B2B网站菜单选择
+    [Arguments]    ${fri}    ${sec}    ${thr}
+    Wait Until Page Contains Element    jquery=li:contains("${fri}") div>dl>dt:contains("${sec}")~dd>a:contains("${thr}")
+    ${href}    Get Element Attribute    jquery=li:contains("${fri}") div>dl>dt:contains("${sec}")~dd>a:contains("${thr}") @href
+    log    ${href}
+    Go To    ${href}
+
+B2B包裹系数
+    [Arguments]    ${value}    ${val1}    ${val2}    ${val3}    ${val4}
+    Wait Until Page Contains Element    jquery=label:contains("${value}")+div input
+    Input Text    jquery=label:contains("${value}")+div input:eq(0)    ${val1}
+    Input Text    jquery=label:contains("${value}")+div input:eq(1)    ${val2}
+    Input Text    jquery=label:contains("${value}")+div input:eq(2)    ${val3}
+    Input Text    jquery=label:contains("${value}")+div input:eq(3)    ${val4}
+
+商品输入
+    [Arguments]    ${value}
+    文本框输入    商品编码：    ${value}
+    sleep    1
+    Click Element    jquery=li.ac_even
+
+时间输入
+    Wait Until Page Contains Element    jquery=label:contains("提货时间")+div input
+    ${val}    获取当前日期+3天
+    Input Text    jquery=label:contains("提货时间")+div input:eq(1)    ${val}
+    sleep    2
+    Click Element    jquery=label:contains("提货时间")
+    sleep    1
+    #文本框输入    提货时间    2017-04-23
+    #sleep    1
+    #Click Element    jquery=label:contain("提货时间")    q
+    #sleep    0.5
+
+运输信息填写
+    下拉框选择    提货类型    自发物流
+    下拉框选择    发货供应商    深圳市万邑通信息科技有限公司
+    文本框输入    快递单号    88888
+    点击按钮    继续
+
+商品信息填写
+    点击文本链接    或逐个添加
+    文本框输入    箱号：    aaaaaaaaa
+    B2B包裹系数    包裹系数：    888    888    888    888
+    商品输入    Iphone 5s 液晶屏总成黑色 - LCD-IP5S-0
+    点击按钮    确定
+    点击按钮    继续
+
+订单物流填写
+    选择物流计划    物流计划    CAN-US-29-Mar
+    下拉框选择    进口商    推荐进口商
+    下拉框选择    出口商    推荐出口商
+    点击按钮    继续
+
+订单信息填写
+    B2B网站菜单选择    海外仓    入库（测试）    新增入库单
+    点击文本链接    标准海外仓入库
+    下拉框选择    WINIT产品    空运-标准体-H
+    下拉框选择    验货仓    ShenZhen Warehouse
+    下拉框选择    目的仓    USWC Warehouse
+    文本框输入    客户订单号    duandongbo
+    点击按钮    继续
+
+提交订单
+    点击按钮    提交
+    关闭浏览器
+
+B2B网站下单流程
+    [Arguments]    ${browser}
+    B2B网站登录
+    订单信息填写
+    商品信息填写
+    订单物流填写
+    运输信息填写
+    提交订单

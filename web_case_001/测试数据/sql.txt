@@ -1,0 +1,4 @@
+*** Variables ***
+${find_orderno_sql}    SELECT MAX(order_no) \ FROM oms_wh_inbound_order a \ WHERE WAREHOUSE_ENTRY_TYPE='SD' AND customer_order_no='duandongbo'    # 查询订单号
+${find_package_no_sql}    SELECT PACKAGE_SERNO FROM oms_wh_inbound_package t,oms_wh_inboundorder_package_rel p WHERE t.PACKAGE_ID=p.INBOUND_PACKAGE_ID AND p.IS_DELETE='N' AND p.INBOUND_ORDER_NO=%s    # 查询编号
+${no_task_opera_sql}    SELECT NAME,real_name FROM wms_operator WHERE NAME NOT IN (SELECT DISTINCT operator FROM wms_task WHERE STATUS NOT IN('CO','END') AND IS_DELETE='N') ORDER BY real_name DESC    # 查询空闲人员

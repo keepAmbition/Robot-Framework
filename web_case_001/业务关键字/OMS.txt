@@ -1,0 +1,50 @@
+*** Settings ***
+Library           Selenium2Library
+Resource          ../通用关键字/通用关键字.txt
+Resource          ../测试环境配置/测试环境变量.txt
+Library           Collections
+Library           String
+
+*** Keywords ***
+登录OMS后台
+    [Arguments]    ${name}    ${pwd}
+    打开浏览器    ${erp_url}    gc
+    Input Text    id=username    ${name}
+    Input Text    id=password    ${pwd}
+    Click Element    Xpath=//input[@class="btn btn-primary btn-lg w-all"]
+
+OMS平台菜单选择
+    [Arguments]    ${menu}
+    ${frist}    ${sec}    Split String    ${menu}    >
+    Wait Until Page Contains Element    jquery=div.aside-wrap a:contains("${frist}")+ul:contains("${sec}")
+    ${herf}    Get Element Attribute    jquery=div.aside-wrap a:contains("${frist}")+ul a:contains("${sec}") @href
+    Go To    ${herf}
+
+OMS关键字选择
+    [Arguments]    ${name}    ${value}
+    下拉框选择    关键字    ${name}
+    文本框输入    关键字    ${value}
+
+点击创建收货单
+    Wait Until Page Contains Element    id=addBtn
+    Click Element    id=addBtn
+
+人员分配
+    Wait Until Page Contains Element    id=operateUserInput
+    Input Text    id=operateUserInput    ${opera_no}    #名称
+    Click Element    id=searchBtn
+    Sleep    2
+    Wait Until Page Contains Element    jquery=#operateList div.show-user:contains("${opera_no}")
+    Double Click Element    jquery=#operateList div.show-user:contains("${opera_no}")
+    div等待加载
+    sleep    5
+
+创建时间输入
+    [Arguments]    ${starttime}    ${endtime}
+    Wait Until Page Contains Element    jquery=label:contains('创建时间')+div input
+    ${start_time}    时间戳转换    ${starttime}
+    Execute Javascript    jQuery("input[name='startDate']").val(${start_time})
+    Execute Javascript    jQuery("label:contains('创建时间')+div input:eq(0)").val(${starttime})
+    ${end_time}    时间戳转换    ${endtime}
+    Execute Javascript    jQuery("input[name='endDate']").val(${end_time})
+    Execute Javascript    jQuery("label:contains('创建时间')+div input:eq(2)").val(${endtime})

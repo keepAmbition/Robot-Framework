@@ -1,0 +1,10 @@
+*** Variables ***
+${b2b-url}        http://url    # b2b地址
+${erp_url}        http://url    # oms后台系统地址
+${mysql_ip}       xxx.xx.xxx.xx    # mysql数据库ip地址
+${mysql_user}     root    # mysql数据库用户名
+${mysql_passwd}    123456    # mysql的用户名对应密码
+${mysql_port}     3306    # mysql的默认端口号
+${oms_db_name}    name    # oms数据库的名称
+${api_server_ip}    http://url    # 接口服务器地址
+${cwm_db_name}    db_name    # 仓库数据库名称

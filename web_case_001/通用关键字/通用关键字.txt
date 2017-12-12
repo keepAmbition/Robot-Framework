@@ -1,0 +1,158 @@
+*** Settings ***
+Library           Selenium2Library
+Resource          ../测试数据/sql.txt
+Resource          ../测试环境配置/测试环境变量.txt
+Library           RequestsLibrary
+Library           Collections
+Library           ../自定义库/url_api1.py
+
+*** Keywords ***
+打开浏览器
+    [Arguments]    ${url}    ${browser}=ff
+    Open Browser    ${url}    ${browser}
+    sleep    0.5
+    Maximize Browser Window
+    Comment    网页注入jquery
+
+关闭浏览器
+    Close Browser
+
+关闭进程
+    Evaluate    os.system(r'taskkill /F /IM chromedriver.exe >nul 2>nul')    os
+    Evaluate    os.system(r'taskkill /F /IM IEDriverServer.exe >nul 2>nul')    os
+    Evaluate    os.system(r'taskkill /F /IM geckodriver.exe >nul 2>nul')    os
+
+获取当前时间
+    ${today}    Evaluate    time.strftime("%Y-%m-%d")    time
+    [Return]    ${today}
+
+加载jquery
+    Execute Javascript    var headID=document.getElementsByTagName("head")[0];var newScript =document.createElement('script');newScript.type='text/javascript';newScript.src='http://172.16.3.158/jquery.min.js';headID.appendChild(newScript);
+    Wait For Condition    return jQuery()!=null    15s
+
+网页注入jquery
+    Wait Until Keyword Succeeds    60    1    加载jquery
+
+文本框输入
+    [Arguments]    ${name}    ${vaule}
+    Wait Until Page Contains Element    jquery=label:contains("${name}")+div input
+    Input Text    jquery=label:contains("${name}")+div input:visible    ${vaule}
+
+点击登录
+    Click Element    id=loginBtn
+
+点击下一步
+    Click Element    id=J_submitBtnStepOne
+
+点击文本链接
+    [Arguments]    ${name}
+    sleep    1
+    Wait Until Page Contains Element    jquery=a:contains("${name}")
+    Wait Until Element Is Visible    jquery=a:contains("${name}")    #jquery=a:contains("${name}"):visible
+    Click Element    jquery=a:contains("${name}")
+
+点击按钮
+    [Arguments]    ${name}
+    Wait Until Page Contains Element    jquery=button:contains('${name}')
+    Wait Until Element Is Visible    jquery=button:contains('${name}'):visible
+    sleep    1
+    ${id}    Get Element Attribute    jquery=button:contains('${name}'):visible @id
+    Click Button    jquery=button:contains('${name}'):visible
+    div等待加载
+    Run Keyword If    "${id}"=="stepOneContinue"    读取订单号
+
+下拉框选择
+    [Arguments]    ${name}    ${value}
+    sleep    2
+    Wait Until Page Contains Element    jquery=label:contains("${name}")+div select
+    Wait Until Element Is Visible    jquery=label:contains("${name}")+div select
+    Select From List By Label    jquery=label:contains("${name}")+div select    ${value}
+    div等待加载
+
+div等待加载
+    Wait Until Page Does Not Contain Element    jquery=div.overlayer.loading    60
+
+选择物流计划
+    [Arguments]    ${name}    ${value}
+    Wait Until Page Contains Element    jquery=label:contains("${name}")+div ul>li:contains("${value}")    60
+    Click Element    id=select_logisticsPlanNo
+    Click Element    jquery=label:contains("${name}")+div ul>li:contains("${value}"):visible
+
+点击提交
+    Wait Until Page Contains Element    id=submitBtn
+    Click Element    id=submitBtn
+
+上传文件
+    [Arguments]    ${filename}
+    Wait Until Element Is Visible    jquery=label:contains("选择文件")
+    Choose File    id=importFile    ${CURDIR}\\file\\${filename}
+    div等待加载
+
+复选框勾选
+    sleep    1
+    Wait Until Page Contains Element    jquery=#tableList>thead>tr input
+    Select Checkbox    jquery=input[name*=commandNo]:first
+    Sleep    2
+
+连接l数据库
+    [Arguments]    ${db_name}
+    ${conn}    Connect To Mysqldb    ${mysql_ip}    ${mysql_port}    ${mysql_user}    ${mysql_passwd}    ${db_name}
+    [Return]    ${conn}
+
+读取订单号
+    ${connect}    连接l数据库    ${oms_db_name}
+    ${data}    Excute Mysql Str    ${connect}    ${find_orderno_sql}
+    ${order_no}    Evaluate    ${data}[0][0]
+    Set Suite Variable    ${order_no}
+
+关闭浏览器进程
+    kill process    firefox.exe
+
+初始化清理环境
+    Evaluate    os.system(r'rd \ /s \ /q \ %temp% \ >nul 2>nul')    os
+    关闭浏览器进程
+
+时间戳转换
+    [Arguments]    ${time}
+    ${ep_time}    Get Time    epoch    ${time}
+    ${ep_time}    Evaluate    ${start_time}*1000
+    [Return]    ${ep_time}
+
+根据订单查询
+    [Documentation]    根据订单号去查询包裹编号，返回包裹编号，
+    ...    入参订单号，订单号是全局变量，第一步下单的时候就已经设置好了变量{oder_no}
+    ${conn}    连接l数据库    ${oms_db_name}
+    ${data}    Excute Mysql Str    ${conn}    ${find_package_no_sql}    ${order_no}
+    @{package_list}    Evaluate    []
+    : FOR    ${i}    IN    @{data}
+    \    ${package_no}    Evaluate    ${i}[0]
+    \    @{package_list}    create list    @{package_list}    ${package_no}
+    [Return]    @{package_list}
+
+查询空闲人员
+    ${conn}    连接l数据库    ${cwm_db_name}
+    ${data}    Excute Mysql Str    ${conn}    ${no_task_opera_sql}
+    log    ${data}
+    ${opera_no}    Evaluate    ${data}[0][0]
+    log    ${opera_no}
+    Set Suite Variable    ${opera_no}
+
+解析返回json数据
+    ${jdata}    收货json    ${opera_no}
+    ${reponse_data}    Scanf Post    ${api_server_ip}    ${jdata}
+    ${reponse_data}    To Json    ${reponse_data}
+    ${code}    Get From Dictionary    ${reponse_data}    code
+    Should Be Equal    ${code}    0
+    ${data}    Get From Dictionary    ${reponse_data}    data
+    ${taskInfoBase}    Get From Dictionary    ${data}    taskInfoBase
+    ${taskno}    Get From Dictionary    ${taskInfoBase}    taskNo
+    Set Suite Variable    ${taskno}
+
+向接口发起请求
+    @{package_list}    根据订单查询
+    : FOR    ${package_no}    IN    @{package_list}
+    \    ${jdata}    扫描包裹json    ${opera_no}    ${package_no}    ${task_no}
+    \    ${reponse_data}    Scanf Post    ${api_server_ip}    ${jdata}
+    \    ${reponse_data}    To Json    ${reponse_data}
+    \    ${code}    Get From Dictionary    ${reponse_data}    code
+    \    Should Be Equal    ${code}    0

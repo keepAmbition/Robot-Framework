@@ -1,0 +1,8 @@
+*** Settings ***
+Library           Selenium2Library
+
+*** Keywords ***
+获取当前日期+3天
+    ${year}    ${month}    ${day}    Get Time    Year,Month,day    NOW+3day
+    ${value}    Set Variable    ${year}-${month}-${day}
+    [Return]    ${value}

@@ -1,0 +1,10 @@
+*** Keywords ***
+收货json
+    [Arguments]    ${username}
+    ${jdata}    Set Variable    { "data":{ "ctx":{"language":"zh_CN", "orgId":"1000000", "userId":"224", "username":"${username}" },"userName":"${username}","warehouseCode":"CNSZX.CWM.CN.CNR" }, "group":"CNSZX.CWM.CN.CNR", "methodName":"queryUserTaskInfo", "serviceName":"com.winit.cwm.spi.operate.ScanOperateService", "version":"1.0.0" }
+    [Return]    ${jdata}
+
+扫描包裹json
+    [Arguments]    ${user}    ${package_no}    ${task_no}
+    ${json}    Set Variable    { "data":{ "ctx":{ "language":"zh_CN", "orgId":"1000000", "userId":"214", "username":"${user}" }, "data":{ "confirmPackageWeight":"Y", "height":"1", "length":"1", "serNo":"${package_no}", "weight":"1", "width":"1" }, "taskNo":"${task_no}", "taskStep":"reception.inputSize", "taskType":"reception", "userName":"${user}", "warehouseCode":"CNSZX.CWM.CN.CNR" }, "group":"CNSZX.CWM.CN.CNR", "methodName":"scanReceptionTask", "serviceName":"com.winit.cwm.spi.operate.ScanOperateService", "version":"1.0.0" }
+    [Return]    ${json}
