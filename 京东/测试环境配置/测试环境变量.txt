@@ -1,0 +1,8 @@
+*** Variables ***
+${url}            http://localhost:4723/wd/hub
+${platformName}    Android
+${platformVersion}    6.0
+${deviceName}     emulator-5554
+${app}            JDMALL-PC2.apk
+${appPackage}     com.jingdong.app.mall
+${appActivity}    com.jingdong.app.mall.main.MainActivity

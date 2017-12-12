@@ -1,0 +1,213 @@
+*** Settings ***
+Library           AppiumLibrary
+
+*** Keywords ***
+安装应用
+    [Arguments]    ${url}    ${platformName}    ${platformVersion}    ${deviceName}    ${app}
+    Open Application    ${url}    platformName=${platformName}    platformVersion=${platformVersion}    deviceName=${deviceName}    app=${CURDIR}/file/${app}
+
+打开应用
+    [Arguments]    ${url}    ${platformName}    ${platformVersion}    ${deviceName}    ${appPackage}    ${appActivity}
+    Open Application    ${url}    platformName=${platformName}    platformVersion=${platformVersion}    deviceName=${deviceName}    appPackage=${appPackage}    appActivity=${appActivity}
+    ...    unicodeKeyboard=True    resetKeyboard=True
+
+打开URL
+    [Arguments]    ${url}
+    Go To URL    ${url}
+
+输入文本
+    [Arguments]    ${locator}    ${text}
+    Input Text    ${locator}    ${text}
+
+输入值
+    [Arguments]    ${locator}    ${text}
+    Input Value    ${locator}    ${text}
+
+输入密码
+    [Arguments]    ${locator}    ${text}
+    Input Password    ${locator}    ${text}
+
+清除文本
+    [Arguments]    ${locator}
+    Clear Text    ${locator}
+
+点击按钮
+    [Arguments]    ${locator}
+    Click Button    ${locator}
+
+点击文本
+    [Arguments]    ${text}
+    Click Text    ${text}
+
+点击元素
+    [Arguments]    ${locator}
+    Click Element    ${locator}
+
+关闭应用
+    Close Application
+
+关闭所有应用
+    Close All Applications
+
+后台运行
+    Background App
+
+滑动
+    [Arguments]    ${start_x}    ${start_y}    ${end_x}    ${end_y}
+    Swipe    ${start_x}    ${start_y}    ${end_x}    ${end_y}
+
+滚动
+    [Arguments]    ${start_locator}    ${end_locator}
+    Scroll    ${start_locator}    ${end_locator}
+
+向上滚动
+    [Arguments]    ${locator}
+    Scroll Up    ${locator}
+
+向下滚动
+    [Arguments]    ${locator}
+    Scroll Down    ${locator}
+
+摇动手机
+    Shake
+
+按关键字
+    [Arguments]    ${keycode}
+    Press Keycode    ${keycode}
+
+暂停
+    [Arguments]    ${time}=1
+    Sleep    ${time}
+
+竖屏
+    PORTRAIT
+
+等待页面元素出现
+    [Arguments]    ${text}    ${timeout}=60
+    Wait Until Page Contains Element    ${text}    ${timeout}    页面元素不能正常显示
+
+等待页面内容出现
+    [Arguments]    ${text}    ${timeout}=60
+    Wait Until Page Contains    ${text}    ${timeout}    页面内容不能正常显示
+
+等待元素激活
+    [Arguments]    ${text}    ${timeout}=60
+    Wait Until Element Is Visible    ${text}    ${timeout}    页面元素不能激活显示
+
+等待页面不包含元素
+    [Arguments]    ${text}    ${timeout}=60
+    Wait Until Page Does Not Contain Element    ${text}    ${timeout}    页面元素不包含显示
+
+等待页面不包含内容
+    [Arguments]    ${text}    ${timeout}=60
+    Wait Until Page Does Not Contain    ${text}    ${timeout}    页面内容不包含显示
+
+缩小元素
+    [Arguments]    ${locator}    ${percent}=200%    ${step}=1
+    Pinch    ${locator}    ${percent}    ${step}
+
+获取Appium超时时间
+    ${timeout}    Get Appium Timeout
+    [Return]    ${timeout}
+
+获取元素坐标
+    [Arguments]    ${locator}
+    ${location}    Get Element Location    ${locator}
+    [Return]    ${location}
+
+获取元素尺寸
+    [Arguments]    ${locator}
+    ${size}    Get Element Size    ${locator}
+    [Return]    ${size}
+
+获取元素属性
+    [Arguments]    ${locator}    ${attribute}
+    ${value}    Get Element Attribute    ${locator}    %{attribute}
+    [Return]    ${value}
+
+获取匹配xpath数
+    [Arguments]    ${xpath}
+    ${count}    Get Matching Xpath Count    ${xpath}
+    [Return]    ${count}
+
+获取所有文本
+    ${contents}    Get Contexts
+    [Return]    ${contents}
+
+获取当前文本
+    ${context}    Get Current Context
+    [Return]    ${context}
+
+获取web元素
+    [Arguments]    ${locator}
+    Get Webelement    ${locator}
+
+获取所有web元素
+    [Arguments]    ${locator}
+    Get Webelements    ${locator}
+
+获取文件
+    [Arguments]    ${path}
+    Pull File    ${path}
+
+获取文件夹
+    [Arguments]    ${path}
+    Pull Folder    ${path}
+
+获取文本
+    [Arguments]    ${ locator}
+    ${ locatortext}    Get Text    ${ locator}
+    [Return]    ${ locatortext}
+
+设置Appium超时
+    [Arguments]    ${timeout}
+    Set Appium Timeout    ${timeout}
+
+返回
+    [Documentation]    浏览器返回上一个的页面
+    Go Back
+
+重置应用
+    Reset Application
+
+锁屏
+    Lock
+
+长按元素
+    [Arguments]    ${locator}
+    Long Press    ${locator}
+
+长按关键字
+    [Arguments]    ${keycode}
+    Long Press Keycode    ${keycode}
+
+隐藏键盘
+    Hide Keyboard
+
+页面不包含元素
+    [Arguments]    ${locator}
+    Page Should Not Contain Element    ${locator}
+
+页面不包含文本
+    [Arguments]    ${locator}
+    Page Should Not Contain Text    ${locator}
+
+页面包含元素
+    [Arguments]    ${locator}
+    Page Should Contain Element    ${locator}
+
+页面包含文本
+    [Arguments]    ${locator}
+    Page Should Contain Text    ${locator}
+
+卸载应用
+    [Arguments]    ${applicationid}
+    Remove Application    ${applicationid}
+
+切换应用
+    [Arguments]    ${appname}
+    Switch Application    ${appname}
+
+切换页面内容
+    [Arguments]    ${name}
+    Switch To Context    ${name}

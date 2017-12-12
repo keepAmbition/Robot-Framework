@@ -1,0 +1,38 @@
+*** Settings ***
+Resource          ../业务关键字/业务关键字.txt
+
+*** Test Cases ***
+自动卸载
+    运行app
+    卸载应用    ${appPackage}
+
+输入框搜索-选择商品
+    运行app
+    搜索框输入    笔记本电脑
+    暂停    3
+    #页面包含文本    Apple/苹果 MacBook Air MMGF2CH/ACore/酷睿 i513.3英寸128G国行正品 全国联保 售后无忧
+    点击文本    销量
+    暂停
+    筛选
+    确认商品    Apple/苹果 MacBook Pro MJLQ2CH/A集成显卡Core/酷睿 i7256g15年新款 XA2升级 全国联保 未拆封 未激活
+    点击收藏
+    购物车
+    暂停    35
+    go back
+    [Teardown]    关闭应用
+
+分类搜索
+    运行APP
+    等待页面元素出现    Xpath=//android.view.View[@index="12"]
+    点击元素    Xpath=//android.view.View[@index="12"]
+    分类遍历至手机
+    选择手机
+    暂停
+    点击文本    加入购物车
+    暂停    3
+    点击文本    黑色
+    点击文本    确定
+    [Teardown]    关闭应用
+
+自动安装
+    安装APP

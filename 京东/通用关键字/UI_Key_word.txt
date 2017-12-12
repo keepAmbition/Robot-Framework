@@ -1,0 +1,74 @@
+*** Settings ***
+Resource          ../测试环境配置/测试环境变量.txt
+Resource          通用关键字.txt
+Resource          ../业务关键字/business_key_word.txt
+
+*** Keywords ***
+搜索
+    [Arguments]    ${test}
+    等待页面元素出现    id=com.jingdong.app.mall:id/vh
+    点击元素    id=com.jingdong.app.mall:id/vh
+    等待页面元素出现    id=com.jd.lib.search:id/search_text
+    输入文本    id=com.jd.lib.search:id/search_text    ${test}
+    暂停
+    点击元素    id=com.jd.lib.search:id/search_btn
+
+加入购物车
+    等待页面内容出现    购物车
+    点击元素    id=com.jd.lib.productdetail:id/add_2_car
+
+首页弹出消息关闭
+    等待页面元素出现    com.jingdong.app.mall:id/ar4
+    点击元素    com.jingdong.app.mall:id/ar4
+
+点击购物车
+    暂停
+    点击元素    com.jd.lib.productdetail:id/pd_txt_shopcar
+    暂停
+
+去结算
+    等待页面元素出现    id=com.jingdong.app.mall:id/crh
+    点击元素    id=com.jingdong.app.mall:id/crh
+
+分类按钮
+    暂停
+    #点击元素    xpath=//android.widget.RadioButton[contains(@index,1)]
+    #点击元素    xpath=//android.widget.RadioGroup[contains(@resource-id,'com.jingdong.app.mall:id/ot')]/android.widget.RadioButton[contains(@index,1)]
+    #点击元素    xpath=//android.widget.RadioGroup[@resource-id="com.jingdong.app.mall:id/ot"]/android.widget.RadioButton[@index="1"]
+    点击元素    xpath=//android.widget.RadioGroup/android.widget.RadioButton[@index="1"]
+
+点击退出登录
+    等待页面内容出现    退出登录
+    点击文本    退出登录
+    等待页面元素出现    id=com.jingdong.app.mall:id/aj
+    点击元素    id=com.jingdong.app.mall:id/aj    #确定退出
+    暂停
+    页面包含元素    id=com.jingdong.app.mall:id/c5k
+
+返回首页
+    点击元素    id=com.jingdong.app.mall:id/cv
+    暂停
+    点击元素    id=com.jd.lib.productdetail:id/title_back
+    暂停
+    点击元素    id=com.jd.lib.search:id/title_back_1
+
+设置
+    等待页面元素出现    id=com.jingdong.app.mall:id/c6j
+    点击元素    id=com.jingdong.app.mall:id/c6j
+
+我的
+    等待页面元素出现    xpath=//android.widget.RadioGroup[@resource-id=”com.jingdong.app.mall:id/oq”]/ android.widget.RadioButton[@index="4"]
+    点击元素    xpath=//android.widget.RadioGroup[@resource-id=”com.jingdong.app.mall:id/oq”]/ android.widget.RadioButton[@index=”4”]
+
+登录
+    等待元素激活    id=com.jingdong.app.mall:id/bik
+    点击元素    id=com.jingdong.app.mall:id/bik
+
+密码
+    [Arguments]    ${password}
+    输入文本    id=com.jingdong.app.mall:id/bic    ${password}
+
+账号
+    [Arguments]    ${useid}
+    等待页面元素出现    id=com.jingdong.app.mall:id/bi6
+    输入文本    id=com.jingdong.app.mall:id/bi6    ${useid}

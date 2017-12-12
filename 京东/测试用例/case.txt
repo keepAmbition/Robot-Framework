@@ -1,0 +1,136 @@
+*** Settings ***
+Resource          ../通用关键字/通用关键字.txt
+Resource          ../通用关键字/UI_Key_word.txt
+
+*** Test Cases ***
+搜索三星液晶显示器
+    运行App
+    暂停    3
+    首页弹出消息关闭
+    暂停    6
+    搜索    三星液晶显示器
+    暂停
+    页面包含文本    三星 S22B310B 21.5英寸 LED 背光液晶显示器
+
+搜索显示器加入购物车
+    运行App
+    暂停    3
+    首页弹出消息关闭
+    暂停    6
+    搜索    三星液晶显示器
+    暂停
+    页面包含文本    三星 S22B310B 21.5英寸 LED 背光液晶显示器
+    点击文本    三星 S22B310B 21.5英寸 LED 背光液晶显示器
+    加入购物车
+    暂停
+    ${dim}    获取文本    com.jd.lib.productdetail:id/shopcar_number
+    Run Keyword If    '${dim}' >= 1    点击购物车
+    暂停
+    去结算
+    用户登录    appmiumhello    hello888
+    暂停
+
+搜索显示器加入购物车返回
+    运行App
+    暂停    3
+    首页弹出消息关闭
+    暂停    6
+    搜索    三星液晶显示器
+    暂停
+    页面包含文本    三星 S22B310B 21.5英寸 LED 背光液晶显示器
+    点击文本    三星 S22B310B 21.5英寸 LED 背光液晶显示器
+    加入购物车
+    暂停
+    ${dim}    获取文本    com.jd.lib.productdetail:id/shopcar_number
+    Run Keyword If    '${dim}' >= 1    点击购物车
+    暂停
+    返回
+
+打开分类栏内容并筛选查询
+    运行App
+    暂停    1
+    首页弹出消息关闭
+    分类按钮
+    等待页面内容出现    手机数码
+    点击文本    手机数码    #进入热门品牌页面
+    等待页面内容出现    小米
+    点击文本    小米
+    暂停    5
+    等待页面内容出现    销量
+    点击文本    销量
+    暂停    5
+    点击文本    筛选
+    等待页面内容出现    京东配送
+    点击文本    货到付款    #京东服务
+    暂停    5
+    Set Log Level    TRACE
+    ${log}    Get Source
+    log    ${log}
+    点击文本    1146-2138\n38%选择
+    点击文本    小米（MI）    #品牌
+    点击文本    5.5-5.1英寸    #屏幕尺寸
+    点击文本    4GB    #运行内存
+    点击文本    确定    #点击确定按钮
+    等待页面内容出现    ¥1799.00
+    页面包含文本    ¥1799.00    #校验结果
+
+首页滑动
+    运行App
+    暂停    3
+    首页弹出消息关闭
+    #向上滑动    例如分辨率1080*1920，向上滑动swipe(x1*0.5,y1*0.75,x2*0.5,y2*0.25)；
+    #滑动    540    1440    540    480
+    #暂停    15
+    #向上滑动    例如分辨率1080*1920，向下滑动swipe(x1*0.5,y1*0.25,x2*0.5,y2*0.75)
+    #滑动    540    480    540    1440
+    #暂停    20
+    ${size}    获取元素尺寸    xpath=//android.widget.FrameLayout[@index=0]
+    ${width}    evaluate    ${size}.get("width")
+    ${height}    evaluate    ${size}.get("height")
+    #向上滑动
+    ${to_up_x1}    evaluate    ${width}/2
+    ${to_up_y1}    evaluate    ${height}*3/4
+    ${to_up_y2}    evaluate    ${height}/4
+    暂停
+    滑动    ${to_up_x1}    ${to_up_y1}    ${to_up_x1}    ${to_up_y2}
+    暂停    10
+    #向下滑动
+    ${to_down_x1}    evaluate    ${width}/2
+    ${to_down_y1}    evaluate    ${height}/4
+    ${to_down_y2}    evaluate    ${height}*3/4
+    滑动    ${to_down_x1}    ${to_down_y1}    ${to_down_x1}    ${to_down_y2}
+    暂停    10
+    #向左滑动
+    #${to_left_x1}    evaluate    ${width}/4
+    #${to_left_y1}    evaluate    ${height}/2
+    #${to_left_x2}    evaluate    ${height}*3/4
+    #滑动    ${to_left_x1}    ${to_left_y1}    ${to_left_x2}    ${to_left_y1}
+    #暂停    10
+    #向右滑动
+    #${to_left_x1}    evaluate    ${width}*4/5
+    #${to_left_y1}    evaluate    ${height}/2
+    #${to_left_x2}    evaluate    ${height}/5
+    #滑动    ${to_left_x1}    ${to_left_y1}    ${to_left_x2}    ${to_left_y1}
+    暂停    10
+
+搜索显示器加入购物车退出登录
+    运行App
+    暂停    3
+    首页弹出消息关闭
+    暂停    6
+    搜索    三星液晶显示器
+    暂停
+    页面包含文本    三星 S22B310B 21.5英寸 LED 背光液晶显示器
+    点击文本    三星 S22B310B 21.5英寸 LED 背光液晶显示器
+    加入购物车
+    暂停
+    ${dim}    获取文本    com.jd.lib.productdetail:id/shopcar_number
+    Run Keyword If    '${dim}' >= 1    点击购物车
+    暂停
+    去结算
+    用户登录    appmiumhello    hello888
+    暂停
+    返回首页
+    我的
+    设置
+    点击退出登录

@@ -1,0 +1,65 @@
+*** Settings ***
+Resource          ../测试环境配置/测试环境变量.txt
+Resource          ../通用关键字/通用关键字.txt
+Library           AppiumLibrary
+
+*** Keywords ***
+分类遍历至手机
+    等待页面内容出现    为您推荐
+    : FOR    ${i}    IN RANGE    14
+    \    点击元素    Xpath=//android.widget.ListView[@resource-id="com.tmall.wireless:id/cat_list"]/android.widget.CheckedTextView[@index="${i}"]
+    \    Exit For Loop If    ${i}==9
+
+选择手机
+    等待页面内容出现    iPhone
+    点击文本    iPhone
+    等待页面内容出现    Apple/苹果 iPhone 7
+    点击文本    Apple/苹果 iPhone 7
+
+搜索框输入
+    [Arguments]    ${value}
+    Wait Until Page Contains Element    id=com.tmall.wireless:id/banner_search_hint
+    Click Element    id=com.tmall.wireless:id/banner_search_hint
+    Wait Until Page Contains Element    id=com.tmall.wireless:id/tm_search_hint_input_new
+    Input Text    id=com.tmall.wireless:id/tm_search_hint_input_new    ${value}
+    Click Element    id=com.tmall.wireless:id/search_bar_gosearch
+
+确认商品
+    [Arguments]    ${value}
+    Wait Until Page Contains    ${value}
+    Click Text    ${value}
+
+购物车
+    Wait Until Page Contains Element    id=com.tmall.wireless:id/detail_main_sys_button
+    Click Element    id=com.tmall.wireless:id/detail_main_sys_button
+
+筛选
+    Wait Until Page Contains    | \ 筛选    60
+    Click Text    | \ 筛选
+    暂停
+    点击文本    37%用户的选择
+    等待页面元素出现    Xpath=// android.widget.TextView[@text="苹果"]
+    点击元素    Xpath=// android.widget.TextView[@text="苹果"]
+    暂停
+    点击文本    笔记本
+    暂停
+    点击文本    15英寸
+    暂停
+    滑动    160    766    160    220
+    暂停
+    点击文本    256MB
+    点击文本    旗舰店
+    暂停
+    点击文本    包邮
+    暂停
+    点击文本    完成
+
+安装APP
+    安装应用    ${url}    ${platformName}    ${platformVersion}    ${deviceName}    ${app}
+
+运行APP
+    打开应用    ${url}    ${platformName}    ${platformVersion}    ${deviceName}    ${appPackage}    ${appActivity}
+
+点击收藏
+    Wait Until Page Contains Element    com.tmall.wireless:id/fav_title
+    Click Element    com.tmall.wireless:id/fav_title

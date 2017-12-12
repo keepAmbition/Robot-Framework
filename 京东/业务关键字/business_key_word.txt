@@ -1,0 +1,18 @@
+*** Settings ***
+Resource          ../通用关键字/通用关键字.txt
+
+*** Keywords ***
+用户登录
+    [Arguments]    ${useid}    ${passwroid}
+    账号    ${useid}
+    暂停
+    密码    ${passwroid}
+    登录
+
+卸载App
+    运行App
+    暂停
+    卸载应用    ${appPackage}
+
+运行App
+    打开应用    ${url}    ${platformName}    ${platformVersion}    ${deviceName}    ${appPackage}    ${appActivity}

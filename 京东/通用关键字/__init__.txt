@@ -1,0 +1,3 @@
+*** Settings ***
+Resource          ../业务关键字/business_key_word.txt
+Library           AppiumLibrary

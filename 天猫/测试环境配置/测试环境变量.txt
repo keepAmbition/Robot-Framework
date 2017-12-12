@@ -1,0 +1,8 @@
+*** Variables ***
+${url}            http://localhost:4723/wd/hub
+${platformName}    Android
+${platformVersion}    5.0
+${deviceName}     127.0.0.1:62001
+${app}            tmallandroid_5.30.3.apk
+${appPackage}     com.tmall.wireless
+${appActivity}    com.tmall.wireless.splash.TMSplashActivity
